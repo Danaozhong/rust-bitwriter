@@ -1,0 +1,24 @@
+[package]
+name = "rust-bitwriter"
+version = "0.0.1"
+authors = ["Clemens Zangl <clemens.zangl@gmail.com>"]
+
+description = """
+Bitwriter is a library to write data on bitlevel into byte vector.
+"""
+
+documentation = "https://docs.rs/rust-bitwriter"
+homepage = "https://github.com/Danaozhong/rust-bitwriter"
+repository = "https://github.com/Danaozhong/rust-bitwriter"
+
+keywords = ["bitwriter", "binary", "bit", "write"]
+
+license = ""
+
+[dependencies]
+cfg-if = "1"
+
+[features]
+std = []
+
+default = ["std"]
