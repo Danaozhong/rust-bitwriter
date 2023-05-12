@@ -54,7 +54,7 @@ impl BitWriter{
         self.write_unsigned_bits(v, bit_count, 64)
     }
 
-    pub fn write_i8(&mut self, v: i16, bit_count: u8) -> Result<()>  {
+    pub fn write_i8(&mut self, v: i8, bit_count: u8) -> Result<()>  {
         self.write_signed_bits(v as i64, bit_count, 8)
     }
 
