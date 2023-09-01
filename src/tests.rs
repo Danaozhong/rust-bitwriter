@@ -1,4 +1,5 @@
 use super::*;
+use std::vec;
 
 #[test]
 fn simple_writing() {
@@ -29,5 +30,34 @@ fn test_bitshift_overflow() {
     writer.write_u64(0x0, 64).expect("failed to write u64");
     writer.write_i64(0x0, 64).expect("failed to write i64");
     assert_eq!(writer.bit_count, 3 * 64);
+    writer.close().expect("failed to close byte vector");
+}
+
+#[test]
+fn test_byte_writing() {
+    let mut writer = BitWriter::new();
+
+    // First, test writing bytes aligned
+    writer
+        .write(&vec![0xFF, 0x22, 0x00, 0x12])
+        .expect("failed to write bytes aligned");
+    assert_eq!(writer.bit_count, 4 * 8);
+
+    // Make the buffer unaligned
+    writer.write_bool(true).expect("failed to write boolean");
+    assert_eq!(writer.bit_count, 4 * 8 + 1);
+    writer
+        .write(&vec![0xFF, 0x22, 0x00, 0x12])
+        .expect("failed to write bytes unaligned");
+    assert_eq!(writer.bit_count, 8 * 8 + 1);
+
+    // Align to byte boundary again
+    writer.align(1).expect("failed to align bit stream");
+    assert_eq!(writer.bit_count, 9 * 8);
+    writer
+        .write(&vec![0xFF])
+        .expect("failed to write bytes aligned");
+    assert_eq!(writer.bit_count, 10 * 8);
+
     writer.close().expect("failed to close byte vector");
 }
