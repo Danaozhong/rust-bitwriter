@@ -87,6 +87,12 @@ impl BitWriter {
     }
 
     pub fn align(&mut self, alignment_bytes: u32) -> Result<()> {
+        if alignment_bytes == 0 {
+            return Err(Error::new(
+                ErrorKind::InvalidInput,
+                "cannot align to 0 bytes",
+            ));
+        }
         let alignment_bits = alignment_bytes as u64 * 8;
         let cur_alignment = self.bit_count % alignment_bits;
         let bits_to_skip = (alignment_bits - cur_alignment) % alignment_bits;
@@ -151,6 +157,32 @@ impl BitWriter {
         if n > 0 {
             let mask = ((1 << n) as u8) - 1;
             self.cache = ((v as u8) & mask) << (8 - n);
+        }
+        Ok(())
+    }
+
+    /// Writes a number of full bytes into the stream.
+    /// This will give best performance if the data is aligned
+    /// to a byte boundary. Otherwise, each data bytes will be
+    /// spread across two bytes in the bitstream.
+    /// Byte boundary can be ensured by using align().
+    pub fn write(&mut self, data: &Vec<u8>) -> Result<()> {
+        // If the data is byte-aligned, we can directly
+        // copy the bytes without performance penalty.
+        if self.bits == 0 {
+            // We are writing full bytes, so there is no
+            // need to update the bit count.
+            self.bit_count += 8 * data.len() as u64;
+            self.data.extend(data);
+            return Ok(());
+        }
+        // Since the buffer is not aligned, we need to
+        // bit-shift each byte.
+        for byte in data {
+            match self.write_u8(*byte, 8) {
+                Ok(()) => (),
+                Err(e) => return Err(e),
+            }
         }
         Ok(())
     }
