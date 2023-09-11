@@ -4,7 +4,11 @@ version = "0.0.1"
 authors = ["Clemens Zangl <clemens.zangl@gmail.com>"]
 
 description = """
-Bitwriter is a library to write data on bitlevel into byte vector.
+`rust-bitwriter` is a library to write data on bit level into byte vector. 
+It is intended to complement https://github.com/irauta/bitreader with a writer 
+part. It supports standard signed/unsigned integer types, such as `u32`, `i64`.
+
+"Unusual" types, such as `i5` or `u22`, are also supported.
 """
 
 documentation = "https://docs.rs/rust-bitwriter"
@@ -13,7 +17,7 @@ repository = "https://github.com/Danaozhong/rust-bitwriter"
 
 keywords = ["bitwriter", "binary", "bit", "write"]
 
-license = ""
+license = "MIT license "
 
 [dependencies]
 cfg-if = "1"
