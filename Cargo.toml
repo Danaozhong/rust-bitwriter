@@ -17,7 +17,7 @@ repository = "https://github.com/Danaozhong/rust-bitwriter"
 
 keywords = ["bitwriter", "binary", "bit", "write"]
 
-license = "MIT license "
+license = "MIT"
 
 [dependencies]
 cfg-if = "1"
