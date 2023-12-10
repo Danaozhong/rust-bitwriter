@@ -36,43 +36,53 @@ impl BitWriter {
             bits: 0,
         }
     }
-    /// Read at most 8 bits into a u8.
+
+    /// Writes at most 8 bits from an u8 type.
     pub fn write_u8(&mut self, v: u8, bit_count: u8) -> Result<()> {
         self.write_unsigned_bits(v as u64, bit_count, 8)
     }
 
+    /// Writes at most 16 bits from an u16 type.
     pub fn write_u16(&mut self, v: u16, bit_count: u8) -> Result<()> {
         self.write_unsigned_bits(v as u64, bit_count, 16)
     }
 
+    /// Writes at most 32 bits from an u32 type.
     pub fn write_u32(&mut self, v: u32, bit_count: u8) -> Result<()> {
         self.write_unsigned_bits(v as u64, bit_count, 32)
     }
 
+    /// Writes at most 64 bits from an u64 type.
     pub fn write_u64(&mut self, v: u64, bit_count: u8) -> Result<()> {
         self.write_unsigned_bits(v, bit_count, 64)
     }
 
+    /// Writes at most 8 bits from an i8 type.
     pub fn write_i8(&mut self, v: i8, bit_count: u8) -> Result<()> {
         self.write_signed_bits(v as i64, bit_count, 8)
     }
 
+    /// Writes at most 16 bits from an i16 type.
     pub fn write_i16(&mut self, v: i16, bit_count: u8) -> Result<()> {
         self.write_signed_bits(v as i64, bit_count, 16)
     }
 
+    /// Writes at most 32 bits from an i32 type.
     pub fn write_i32(&mut self, v: i32, bit_count: u8) -> Result<()> {
         self.write_signed_bits(v as i64, bit_count, 32)
     }
 
+    /// Writes at most 64 bits from an i64 type.
     pub fn write_i64(&mut self, v: i64, bit_count: u8) -> Result<()> {
         self.write_signed_bits(v, bit_count, 64)
     }
 
+    /// Writes a boolean type (as one bit).
     pub fn write_bool(&mut self, v: bool) -> Result<()> {
         self.write_unsigned_bits(v as u64, 1, 1)
     }
 
+    /// Skips a number of bits by writing 0.
     pub fn skip(&mut self, n: u64) -> Result<()> {
         // fill the current buffer
         for _ in 0..(n / 64) {
@@ -86,6 +96,9 @@ impl BitWriter {
         Ok(())
     }
 
+    /// Aligns the bit stream to the x byte boundary.
+    /// for alignment_bytes = 1, it will align to 8 bits,
+    /// for alignment_bytes = 2, it will align to 16 bits, and so forth.
     pub fn align(&mut self, alignment_bytes: u32) -> Result<()> {
         if alignment_bytes == 0 {
             return Err(Error::new(
@@ -99,6 +112,7 @@ impl BitWriter {
         self.skip(bits_to_skip)
     }
 
+    /// Writes a signed integer of any length.
     pub fn write_signed_bits(&mut self, mut v: i64, n: u8, maximum_count: u8) -> Result<()> {
         if n == 0 {
             return Ok(());
@@ -187,6 +201,8 @@ impl BitWriter {
         Ok(())
     }
 
+    /// Closes the bit stream, which will align to the next byte boundary
+    /// by writing 0s.
     pub fn close(&mut self) -> Result<()> {
         // align to the next byte boundary
         self.align(1)?;
@@ -198,6 +214,9 @@ impl BitWriter {
         self.bit_count
     }
 
+    /// Returns the written data as a byte array. Ensure to call
+    /// close() before retrieving the data, to ensure the last
+    /// bits were written correctly.
     pub fn data(&self) -> &Vec<u8> {
         &self.data
     }

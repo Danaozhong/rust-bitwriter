@@ -1,12 +1,12 @@
 # rust-bitwriter
 
-rust-bitwriter is a Rust library to write bits into a byte vector.
+`rust-bitwriter` is a rust crate to write data into a bit stream.
 
-It is intended to complement https://github.com/irauta/bitreader with a writer part. It supports standard signed/unsigned integer types, such as u32, i64, as well as integers of any bit length (up to 64), such as i28.
+![tests](https://github.com/Danaozhong/rust-bitwriter/actions/workflows/test.yml/badge.svg)
 
+This example shows how to write a `bool`, an `u28` and an `i28` into a byte vector:
 
-This example shows how to write a bool, an u28 and an i28 into a byte vector:
-
+```rust
     let mut writer = BitWriter::new();
 
     writer.write_bool(true).expect("failed to write bool");
@@ -15,6 +15,15 @@ This example shows how to write a bool, an u28 and an i28 into a byte vector:
     
     writer.close().expect("failed to close byte vector");
     let buffer = writer.data();
+```
+
+You can write signed and unsigned integers with 1-64 bit length.
+
+It is intended to complement [irauta/bitreader](https://github.com/irauta/bitreader) with a writer component.
 
 
-This is my first Rust project, so there might be some obvious issues. If you have some suggestions or improvements, please create a PR!
+This is my first rust project, so there might be some issues. If you have some suggestions or improvements, please feel welcomed to raise a PR!
+
+## License
+
+Licensed under the Apache License, Version 2.0 or the MIT license, at your option.
